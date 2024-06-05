@@ -487,12 +487,18 @@ def run(
                     predictions.append(sample_prediction)
 
                 # use only biencoder
+                #---add---
+                ids = []
+                #---add---
                 return (
                     biencoder_accuracy,
                     recall_at,
                     -1,
                     -1,
                     len(samples),
+                    #---add---
+                    ids,
+                    #---add---
                     predictions,
                     scores,
                 )
