@@ -55,7 +55,7 @@ def reform_result(added_data, index, predictions, scores):
   for mention in range(len(predictions)):
     record = []
     for candidate in range(len(predictions[mention])):
-      record.append([predictions[mention][candidate], str(scores[mention][candidate])])
+      record.append([predictions[mention][candidate], float(scores[mention][candidate])])
     added_data[index]["gold_spans"][mention]["predictions"] = record
   return added_data
 
@@ -80,32 +80,34 @@ def process(file_path_read, file_path_write):
 
 
 # 1. ace
-# Read input data
-test1_ace = []
-with open("src/blink/ace2004.jsonl", 'r', encoding='utf-8') as f:
-  for l in f:
-    json_object = json.loads(l.strip())
-    test1_ace.append(json_object)
-# Prepare container
-added_data = test1_ace
-for i in range(len(test1_ace)):
-  # Run model
-  data_to_link = transform(test1_ace, i)
-  _, _, _, _, _, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
-  # Just show
-  # j = 0
-  # for mention in data_to_link:
-  #   print("mention: "+ str(mention["mention"]))
-  #   print("predictions: ")
-  #   for k in range(len(predictions[j])):
-  #     print("  " + str(k + 1) + ". title: " + str(predictions[j][k]) + ", score: " + str(scores[j][k]))
-  #   j += 1
-  # print("____________________________________________________________________________________________________")
-  # Just show
-  # Reform result data
-  added_data = reform_result(added_data, i, predictions, scores)
-# store data
-write_jsonl("src/blink/ace2004_pred.jsonl", added_data)
+# # Read input data
+# test1_ace = []
+# with open("src/blink/ace2004.jsonl", 'r', encoding='utf-8') as f:
+#   for l in f:
+#     json_object = json.loads(l.strip())
+#     test1_ace.append(json_object)
+# # Prepare container
+# added_data = test1_ace
+# for i in range(len(test1_ace)):
+#   # Run model
+#   data_to_link = transform(test1_ace, i)
+#   _, _, _, _, _, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+#   # Just show
+#   # j = 0
+#   # for mention in data_to_link:
+#   #   print("mention: "+ str(mention["mention"]))
+#   #   print("predictions: ")
+#   #   for k in range(len(predictions[j])):
+#   #     print("  " + str(k + 1) + ". title: " + str(predictions[j][k]) + ", score: " + str(scores[j][k]))
+#   #   j += 1
+#   # print("____________________________________________________________________________________________________")
+#   # Just show
+#   # Reform result data
+#   added_data = reform_result(added_data, i, predictions, scores)
+# # store data
+# write_jsonl("src/blink/ace2004_pred.jsonl", added_data)
+
+process("src/blink/ace2004.jsonl", "src/blink/ace2004_pred.jsonl")
 # Just test
 print("Test____________________________________________________________________________________________________")
 with open("src/blink/ace2004_pred.jsonl", 'r', encoding='utf-8') as f:
@@ -114,8 +116,6 @@ with open("src/blink/ace2004_pred.jsonl", 'r', encoding='utf-8') as f:
     print(json_object)
 print("Test____________________________________________________________________________________________________")
 # Just test
-
-# process("src/blink/ace2004.jsonl", "src/blink/ace2004_pred.jsonl")
 
 # 2. aida
 # process("src/blink/aida.jsonl", "src/blink/aida_pred.jsonl")
