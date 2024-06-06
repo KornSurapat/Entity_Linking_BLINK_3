@@ -489,6 +489,7 @@ def run(
                 # use only biencoder
                 #---add---
                 ids = []
+                scores = []
                 #---add---
                 return (
                     biencoder_accuracy,
@@ -496,9 +497,7 @@ def run(
                     -1,
                     -1,
                     len(samples),
-                    #---add---
                     ids,
-                    #---add---
                     predictions,
                     scores,
                 )

@@ -27,6 +27,14 @@ args = argparse.Namespace(**config)
 models = main_dense.load_models(args, logger=None)
 
 
+def read_jsonl(file_path):
+  test_data = []
+  with open(file_path, 'r', encoding='utf-8') as f:
+    for l in f:
+      json_object = json.loads(l.strip())
+      test_data.append(json_object)
+  return test_data
+
 def transform(test_data, index):
   data_to_link = []
   for i in range(len(test_data[index]["gold_spans"])):
@@ -63,20 +71,40 @@ def write_jsonl(file_path, outer_result_data):
     for item in outer_result_data:
       f.write(json.dumps(item) + '\n')
 
+def process(file_path_read, file_path_write):
+  # Read input data
+  test_data = read_jsonl(file_path_read)
+  # Prepare container
+  outer_result_data = []
+  for i in range(len(test_data)):
+    # Prepare container
+    outer_record = {}
+    outer_record["text"] = test_data[i]["text"]
+    # Run model
+    data_to_link = transform(test_data, i)
+    _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+    # Reform result data
+    outer_record["result"] = reform_result(data_to_link, ids, predictions, scores)
+    # store data
+    outer_result_data.append(outer_record)
+  # store data
+  write_jsonl(file_path_write, outer_result_data)
+
+
 # 1. ace
+# 1
 test1_ace = []
 with open("src/blink/ace2004.jsonl", 'r', encoding='utf-8') as f:
   for l in f:
     json_object = json.loads(l.strip())
     test1_ace.append(json_object)
-
+# 2
 outer_result_data = []
-
 for i in range(len(test1_ace)):
-  # Prepare data
+  # 2
   outer_record = {}
   outer_record["text"] = test1_ace[i]["text"]
-  # Run model
+  # 3
   data_to_link = transform(test1_ace, i)
   _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
   # Just show
@@ -86,167 +114,56 @@ for i in range(len(test1_ace)):
     for i in range(len(ids)):
       print("  " + str(i + 1) + ". id: " + str(ids[i]) + ", title: " + str(predictions[i]) + ", score: " + str(scores[i]))
   print("____________________________________________________________________________________________________")
-  # Reform result data
+  # 4
   outer_record["result"] = reform_result(data_to_link, ids, predictions, scores)
-  # store data
+  # 5
   outer_result_data.append(outer_record)
-
+# 5
 # write_jsonl("src/blink/ace2004_pred.jsonl", outer_result_data)
 
+# process("src/blink/ace2004.jsonl", "src/blink/ace2004_pred.jsonl")
+
 # 2. aida
-test2_aida = []
-with open("src/blink/aida.jsonl", 'r', encoding='utf-8') as f:
-  for l in f:
-    json_object = json.loads(l.strip())
-    test2_aida.append(json_object)
-
-for i in range(len(test2_aida)):
-  data_to_link = transform(test2_aida, i)
-  _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
-
+# process("src/blink/aida.jsonl", "src/blink/aida_pred.jsonl")
 
 # 3. aquaint
-test3_aquaint = []
-with open("src/blink/aquaint.jsonl", 'r', encoding='utf-8') as f:
-  for l in f:
-    json_object = json.loads(l.strip())
-    test3_aquaint.append(json_object)
-
-for i in range(len(test3_aquaint)):
-  data_to_link = transform(test3_aquaint, i)
-  _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+# process("src/blink/aquaint.jsonl", "src/blink/aquaint_pred.jsonl")
 
 # 4. cweb
-test4_cweb = []
-with open("src/blink/cweb.jsonl", 'r', encoding='utf-8') as f:
-  for l in f:
-    json_object = json.loads(l.strip())
-    test4_cweb.append(json_object)
-
-for i in range(len(test4_cweb)):
-  data_to_link = transform(test4_cweb, i)
-  _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+# process("src/blink/cweb.jsonl", "src/blink/cweb_pred.jsonl")
 
 # 5. graphq
-test5_graphq = []
-with open("src/blink/graphq.jsonl", 'r', encoding='utf-8') as f:
-  for l in f:
-    json_object = json.loads(l.strip())
-    test5_graphq.append(json_object)
-
-for i in range(len(test5_graphq)):
-  data_to_link = transform(test5_graphq, i)
-  _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+# process("src/blink/graphq.jsonl", "src/blink/graphq_pred.jsonl")
 
 # 6. mintaka
-test6_mintaka = []
-with open("src/blink/mintaka.jsonl", 'r', encoding='utf-8') as f:
-  for l in f:
-    json_object = json.loads(l.strip())
-    test6_mintaka.append(json_object)
-
-for i in range(len(test6_mintaka)):
-  data_to_link = transform(test6_mintaka, i)
-  _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+# process("src/blink/mintaka.jsonl", "src/blink/mintaka_pred.jsonl")
 
 # 7. msnbc
-test7_msnbc = []
-with open("src/blink/msnbc.jsonl", 'r', encoding='utf-8') as f:
-  for l in f:
-    json_object = json.loads(l.strip())
-    test7_msnbc.append(json_object)
-
-for i in range(len(test7_msnbc)):
-  data_to_link = transform(test7_msnbc, i)
-  _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+# process("src/blink/msnbc.jsonl", "src/blink/msnbc_pred.jsonl")
 
 # 8. reddit_comments
-test8_reddit_comments = []
-with open("src/blink/reddit_comments.jsonl", 'r', encoding='utf-8') as f:
-  for l in f:
-    json_object = json.loads(l.strip())
-    test8_reddit_comments.append(json_object)
-
-for i in range(len(test8_reddit_comments)):
-  data_to_link = transform(test8_reddit_comments, i)
-  _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+# process("src/blink/reddit_comments.jsonl", "src/blink/reddit_comments_pred.jsonl")
 
 # 9. reddit_posts
-test9_reddit_posts = []
-with open("src/blink/reddit_posts.jsonl", 'r', encoding='utf-8') as f:
-  for l in f:
-    json_object = json.loads(l.strip())
-    test9_reddit_posts.append(json_object)
-
-for i in range(len(test9_reddit_posts)):
-  data_to_link = transform(test9_reddit_posts, i)
-  _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+# process("src/blink/reddit_posts.jsonl", "src/blink/reddit_posts_pred.jsonl")
 
 # 10. shadow
-test10_shadow = []
-with open("src/blink/shadow.jsonl", 'r', encoding='utf-8') as f:
-  for l in f:
-    json_object = json.loads(l.strip())
-    test10_shadow.append(json_object)
-
-for i in range(len(test10_shadow)):
-  data_to_link = transform(test10_shadow, i)
-  _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+# process("src/blink/shadow.jsonl", "src/blink/shadow_pred.jsonl")
 
 # 11. tail
-test11_tail = []
-with open("src/blink/tail.jsonl", 'r', encoding='utf-8') as f:
-  for l in f:
-    json_object = json.loads(l.strip())
-    test11_tail.append(json_object)
-
-for i in range(len(test11_tail)):
-  data_to_link = transform(test11_tail, i)
-  _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+# process("src/blink/tail.jsonl", "src/blink/tail_pred.jsonl")
 
 # 12. top
-test12_top = []
-with open("src/blink/top.jsonl", 'r', encoding='utf-8') as f:
-  for l in f:
-    json_object = json.loads(l.strip())
-    test12_top.append(json_object)
-
-for i in range(len(test12_top)):
-  data_to_link = transform(test12_top, i)
-  _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+# process("src/blink/top.jsonl", "src/blink/top_pred.jsonl")
 
 # 13. tweeki
-test13_tweeki = []
-with open("src/blink/tweeki.jsonl", 'r', encoding='utf-8') as f:
-  for l in f:
-    json_object = json.loads(l.strip())
-    test13_tweeki.append(json_object)
-
-for i in range(len(test13_tweeki)):
-  data_to_link = transform(test13_tweeki, i)
-  _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+# process("src/blink/tweeki.jsonl", "src/blink/tweeki_pred.jsonl")
 
 # 14. webqsp
-test14_webqsp = []
-with open("src/blink/webqsp.jsonl", 'r', encoding='utf-8') as f:
-  for l in f:
-    json_object = json.loads(l.strip())
-    test14_webqsp.append(json_object)
-
-for i in range(len(test14_webqsp)):
-  data_to_link = transform(test14_webqsp, i)
-  _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+# process("src/blink/webqsp.jsonl", "src/blink/webqsp_pred.jsonl")
 
 # 15. wiki
-test15_wiki = []
-with open("src/blink/wiki.jsonl", 'r', encoding='utf-8') as f:
-  for l in f:
-    json_object = json.loads(l.strip())
-    test15_wiki.append(json_object)
-
-for i in range(len(test15_wiki)):
-  data_to_link = transform(test15_wiki, i)
-  _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+# process("src/blink/wiki.jsonl", "src/blink/wiki_pred.jsonl")
 
 # data_to_link = [ {
 #                     "id": 0,
