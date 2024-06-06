@@ -51,60 +51,45 @@ def transform(test_data, index):
     data_to_link.append(record)
   return data_to_link
 
-def reform_result(data_to_link, ids, predictions, scores):
-  result_data = []
-  for mention in data_to_link:
-    record = {}
-    record["mention"] = mention["mention"]
-    record["predictions"] = []
-    for i in range(len(ids)):
-      inner_record = {}
-      inner_record["id"] = ids[i]
-      inner_record["title"] = predictions[i]
-      inner_record["score"] = scores[i]
-      record["predictions"].append(inner_record)
-    result_data.append(record)
-  return result_data
+def reform_result(added_data, index, predictions, scores):
+  for mention in range(len(predictions)):
+    record = []
+    for candidate in range(len(predictions[mention])):
+      record.append([predictions[mention][candidate], scores[mention][candidate]])
+    added_data[index]["gold_spans"][mention]["predictions"] = record
+  return added_data
 
-def write_jsonl(file_path, outer_result_data):
+def write_jsonl(file_path, added_data):
   with open(file_path, 'w', encoding='utf-8') as f:
-    for item in outer_result_data:
+    for item in added_data:
       f.write(json.dumps(item) + '\n')
 
 def process(file_path_read, file_path_write):
   # Read input data
   test_data = read_jsonl(file_path_read)
   # Prepare container
-  outer_result_data = []
+  added_data = test_data
   for i in range(len(test_data)):
-    # Prepare container
-    outer_record = {}
-    outer_record["text"] = test_data[i]["text"]
     # Run model
     data_to_link = transform(test_data, i)
     _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
     # Reform result data
-    outer_record["result"] = reform_result(data_to_link, ids, predictions, scores)
-    # store data
-    outer_result_data.append(outer_record)
+    added_data = reform_result(added_data, i, predictions, scores)
   # store data
-  write_jsonl(file_path_write, outer_result_data)
+  write_jsonl(file_path_write, added_data)
 
 
 # 1. ace
-# 1
+# Read input data
 test1_ace = []
 with open("src/blink/ace2004.jsonl", 'r', encoding='utf-8') as f:
   for l in f:
     json_object = json.loads(l.strip())
     test1_ace.append(json_object)
-# 2
-# outer_result_data = []
+# Prepare container
+added_data = test1_ace
 for i in range(len(test1_ace)):
-  # 2
-  # outer_record = {}
-  # outer_record["text"] = test1_ace[i]["text"]
-  # 3
+  # Run model
   data_to_link = transform(test1_ace, i)
   _, _, _, _, _, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
   # Just show
@@ -116,12 +101,19 @@ for i in range(len(test1_ace)):
       print("  " + str(k + 1) + ". title: " + str(predictions[j][k]) + ", score: " + str(scores[j][k]))
     j += 1
   print("____________________________________________________________________________________________________")
-  # 4
-  # outer_record["result"] = reform_result(data_to_link, ids, predictions, scores)
-  # 5
-  # outer_result_data.append(outer_record)
-# 5
-# write_jsonl("src/blink/ace2004_pred.jsonl", outer_result_data)
+  # Just show
+  # Reform result data
+  added_data = reform_result(added_data, i, predictions, scores)
+# store data
+write_jsonl("src/blink/ace2004_pred.jsonl", added_data)
+# Just test
+print("Test____________________________________________________________________________________________________")
+with open("src/blink/ace2004_pred.jsonl", 'r', encoding='utf-8') as f:
+  for l in f:
+    json_object = json.loads(l.strip())
+    print(json_object)
+print("Test____________________________________________________________________________________________________")
+# Just test
 
 # process("src/blink/ace2004.jsonl", "src/blink/ace2004_pred.jsonl")
 
