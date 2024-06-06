@@ -113,7 +113,7 @@ for i in range(len(test1_ace)):
     print("mention: "+ str(mention["mention"]))
     print("predictions: ")
     for k in range(len(predictions[j])):
-      print("  " + str(j + 1) + ". title: " + str(predictions[j][k]) + ", score: " + str(scores[j][k]))
+      print("  " + str(k + 1) + ". title: " + str(predictions[j][k]) + ", score: " + str(scores[j][k]))
     j += 1
   print("____________________________________________________________________________________________________")
   # 4
