@@ -55,8 +55,8 @@ def reform_result(added_data, index, predictions, scores):
   for mention in range(len(predictions)):
     record = []
     for candidate in range(len(predictions[mention])):
-      record.append(str([predictions[mention][candidate], str(scores[mention][candidate])]))
-    added_data[index]["gold_spans"][mention]["predictions"] = str(record)
+      record.append([predictions[mention][candidate], str(scores[mention][candidate])])
+    added_data[index]["gold_spans"][mention]["predictions"] = record
   return added_data
 
 def write_jsonl(file_path, added_data):
