@@ -108,11 +108,13 @@ for i in range(len(test1_ace)):
   data_to_link = transform(test1_ace, i)
   _, _, _, _, _, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
   # Just show
+  j = 0
   for mention in data_to_link:
     print("mention: "+ str(mention["mention"]))
     print("predictions: ")
-    for i in range(len(predictions)):
-      print("  " + str(i + 1) + ". title: " + str(predictions[i]) + ", score: " + str(scores[i]))
+    for k in range(len(predictions[j])):
+      print("  " + str(j + 1) + ". title: " + str(predictions[j][k]) + ", score: " + str(scores[j][k]))
+    j += 1
   print("____________________________________________________________________________________________________")
   # 4
   # outer_record["result"] = reform_result(data_to_link, ids, predictions, scores)
