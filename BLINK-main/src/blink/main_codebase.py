@@ -108,6 +108,7 @@ def process(file_path_read, file_path_write):
 # write_jsonl("src/blink/ace2004_pred.jsonl", added_data)
 
 process("src/blink/ace2004.jsonl", "src/blink/ace2004_pred.jsonl")
+print("1 done____________________________________________________________________________________________________")
 # Just test
 print("Test____________________________________________________________________________________________________")
 with open("src/blink/ace2004_pred.jsonl", 'r', encoding='utf-8') as f:
@@ -118,46 +119,60 @@ print("Test_____________________________________________________________________
 # Just test
 
 # 2. aida
-# process("src/blink/aida.jsonl", "src/blink/aida_pred.jsonl")
+process("src/blink/aida.jsonl", "src/blink/aida_pred.jsonl")
+print("2 done____________________________________________________________________________________________________")
 
 # 3. aquaint
-# process("src/blink/aquaint.jsonl", "src/blink/aquaint_pred.jsonl")
+process("src/blink/aquaint.jsonl", "src/blink/aquaint_pred.jsonl")
+print("3 done____________________________________________________________________________________________________")
 
 # 4. cweb
-# process("src/blink/cweb.jsonl", "src/blink/cweb_pred.jsonl")
+process("src/blink/cweb.jsonl", "src/blink/cweb_pred.jsonl")
+print("4 done____________________________________________________________________________________________________")
 
 # 5. graphq
-# process("src/blink/graphq.jsonl", "src/blink/graphq_pred.jsonl")
+process("src/blink/graphq.jsonl", "src/blink/graphq_pred.jsonl")
+print("5 done____________________________________________________________________________________________________")
 
 # 6. mintaka
-# process("src/blink/mintaka.jsonl", "src/blink/mintaka_pred.jsonl")
+process("src/blink/mintaka.jsonl", "src/blink/mintaka_pred.jsonl")
+print("6 done____________________________________________________________________________________________________")
 
 # 7. msnbc
-# process("src/blink/msnbc.jsonl", "src/blink/msnbc_pred.jsonl")
+process("src/blink/msnbc.jsonl", "src/blink/msnbc_pred.jsonl")
+print("7 done____________________________________________________________________________________________________")
 
 # 8. reddit_comments
-# process("src/blink/reddit_comments.jsonl", "src/blink/reddit_comments_pred.jsonl")
+process("src/blink/reddit_comments.jsonl", "src/blink/reddit_comments_pred.jsonl")
+print("8 done____________________________________________________________________________________________________")
 
 # 9. reddit_posts
-# process("src/blink/reddit_posts.jsonl", "src/blink/reddit_posts_pred.jsonl")
+process("src/blink/reddit_posts.jsonl", "src/blink/reddit_posts_pred.jsonl")
+print("9 done____________________________________________________________________________________________________")
 
 # 10. shadow
-# process("src/blink/shadow.jsonl", "src/blink/shadow_pred.jsonl")
+process("src/blink/shadow.jsonl", "src/blink/shadow_pred.jsonl")
+print("10 done____________________________________________________________________________________________________")
 
 # 11. tail
-# process("src/blink/tail.jsonl", "src/blink/tail_pred.jsonl")
+process("src/blink/tail.jsonl", "src/blink/tail_pred.jsonl")
+print("11 done____________________________________________________________________________________________________")
 
 # 12. top
-# process("src/blink/top.jsonl", "src/blink/top_pred.jsonl")
+process("src/blink/top.jsonl", "src/blink/top_pred.jsonl")
+print("12 done____________________________________________________________________________________________________")
 
 # 13. tweeki
-# process("src/blink/tweeki.jsonl", "src/blink/tweeki_pred.jsonl")
+process("src/blink/tweeki.jsonl", "src/blink/tweeki_pred.jsonl")
+print("13 done____________________________________________________________________________________________________")
 
 # 14. webqsp
-# process("src/blink/webqsp.jsonl", "src/blink/webqsp_pred.jsonl")
+process("src/blink/webqsp.jsonl", "src/blink/webqsp_pred.jsonl")
+print("14 done____________________________________________________________________________________________________")
 
 # 15. wiki
-# process("src/blink/wiki.jsonl", "src/blink/wiki_pred.jsonl")
+process("src/blink/wiki.jsonl", "src/blink/wiki_pred.jsonl")
+print("15 done____________________________________________________________________________________________________")
 
 # data_to_link = [ {
 #                     "id": 0,
