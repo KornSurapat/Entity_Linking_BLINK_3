@@ -99,25 +99,25 @@ with open("src/blink/ace2004.jsonl", 'r', encoding='utf-8') as f:
     json_object = json.loads(l.strip())
     test1_ace.append(json_object)
 # 2
-outer_result_data = []
+# outer_result_data = []
 for i in range(len(test1_ace)):
   # 2
-  outer_record = {}
-  outer_record["text"] = test1_ace[i]["text"]
+  # outer_record = {}
+  # outer_record["text"] = test1_ace[i]["text"]
   # 3
   data_to_link = transform(test1_ace, i)
-  _, _, _, _, _, ids, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
+  _, _, _, _, _, predictions, scores, = main_dense.run(args, None, *models, test_data=data_to_link)
   # Just show
   for mention in data_to_link:
     print("mention: "+ str(mention["mention"]))
     print("predictions: ")
-    for i in range(len(ids)):
-      print("  " + str(i + 1) + ". id: " + str(ids[i]) + ", title: " + str(predictions[i]) + ", score: " + str(scores[i]))
+    for i in range(len(predictions)):
+      print("  " + str(i + 1) + ". title: " + str(predictions[i]) + ", score: " + str(scores[i]))
   print("____________________________________________________________________________________________________")
   # 4
-  outer_record["result"] = reform_result(data_to_link, ids, predictions, scores)
+  # outer_record["result"] = reform_result(data_to_link, ids, predictions, scores)
   # 5
-  outer_result_data.append(outer_record)
+  # outer_result_data.append(outer_record)
 # 5
 # write_jsonl("src/blink/ace2004_pred.jsonl", outer_result_data)
 

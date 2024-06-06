@@ -487,17 +487,12 @@ def run(
                     predictions.append(sample_prediction)
 
                 # use only biencoder
-                #---add---
-                ids = []
-                scores = []
-                #---add---
                 return (
                     biencoder_accuracy,
                     recall_at,
                     -1,
                     -1,
                     len(samples),
-                    ids,
                     predictions,
                     scores,
                 )
@@ -545,9 +540,6 @@ def run(
 
             scores = []
             predictions = []
-            #---add---
-            ids = []
-            #---add---
             for entity_list, index_list, scores_list in zip(
                 nns, index_array, unsorted_scores
             ):
@@ -557,22 +549,13 @@ def run(
                 # descending order
                 index_list.reverse()
 
-                #---add---
-                sample_id = []
-                #---add---
                 sample_prediction = []
                 sample_scores = []
                 for index in index_list:
                     e_id = entity_list[index]
                     e_title = id2title[e_id]
-                    #---add---
-                    sample_id.append(e_id)
-                    #---add---
                     sample_prediction.append(e_title)
                     sample_scores.append(scores_list[index])
-                #---add---
-                ids.append(sample_id)
-                #---add---
                 predictions.append(sample_prediction)
                 scores.append(sample_scores)
 
@@ -598,7 +581,6 @@ def run(
                 crossencoder_normalized_accuracy,
                 overall_unormalized_accuracy,
                 len(samples),
-                ids,
                 predictions,
                 scores,
             )
